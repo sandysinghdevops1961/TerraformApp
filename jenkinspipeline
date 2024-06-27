@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+    stages {
+        stage('Terraform Git Checkout'){
+            steps {
+                script{
+                        try 
+                        {
+                            echo "checkout started"
+                            checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'AWSTerraformGit', url: 'https://github.com/clouddevaws1961/Terraform.git']])
+                        } 
+                        catch (Exception e)
+                        {
+                        
+                        }
+                }
+            }
+        }
+
+        stage('Terraform Init'){
+            steps {
+                script {
+                    try
+                    {
+                        echo "terraform init"
+                        sh 'terraform init -migrate-state'
+                        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredential', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')])                                 
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Plan'){
+            steps {
+               script {
+                      echo "terraform plan"
+                      sh 'terraform plan -out tfplan'
+                    }   
+                
+            }
+        }
+
+        // stage('Terraform apply'){
+        //     steps{
+        //         sh 'terraform apply -auto-approve=true'
+        //     }
+        // }
+
+    }
+
+   
+}
