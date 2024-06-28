@@ -24,11 +24,10 @@ module "Security-Groups" {
   vpc_id = module.networking.outputVPCid
 }
 
-# module "JenkinsPair" {
-#   source = "./key-pair"
-#   key_name ="JenkinsPair" 
-#   publickeyInstance = file("~/.ssh/JenkinsPair.pem")
-# }
+module "JenkinsPair" {
+  source = "./key-pair"
+  key_name ="JenkinsPair" 
+}
 
 
 module "JenkinsServer" {
@@ -37,30 +36,29 @@ module "JenkinsServer" {
   instance_type                 = "t2.large"
   key_name                      = "JenkinsPair"
   associate_public_ip_address   = true
-  user_data                     = templatefile("/UserData/Jenkins/Jenkins.sh",{})
   subnet_id                     = tolist(module.networking.publicSubnet)[0]
   awsSecuritygroup              = module.Security-Groups.outputSecurityId
   instanceTag                   ="JenkinsServer"
-  privatekeypath                ="~/.ssh/JenkinsPair.pem" 
+  userData                      =base64encode(templatefile("/UserData/Jenkins/jenkins.sh",{}))
 }
 
-# module "WorkerKey-pair" {
+# module "JavaKeypair" {
 #   source = "./key-pair"
-#   key_name ="WorkerkeyPair" 
-#   publickeyInstance = file("~/.ssh/WorkerK8S.pub")
+#   key_name ="JavakeyPair" 
+#   publickeyInstance = file("~/.ssh/JavaKeyPair.pem")
 # }
 
-# module "WorkerNodeServer" {
+# module "JavaAppServer" {
 #   source                        = "./Instance"
 #   ami                           = var.ami
 #   instance_type                 = "t2.medium"
-#   key_name                      = "MasterkeyPair"
+#   key_name                      = "JavakeyPair"
 #   associate_public_ip_address   = true
-#   user_data                     = templatefile("/K8S/K8SWorker.sh",{})
 #   subnet_id                     = tolist(module.networking.publicSubnet)[1]
 #   awsSecuritygroup              = module.Security-Groups.outputSecurityId
-#   instanceTag                   ="WorkerNodeServer"
-#   privatekeypath                ="~/.ssh/Workerk8S.pub"
+#   instanceTag                   ="JavaApplicationServer"
+#   privatekeypath                ="~/.ssh/JavaKeyPair.pem"
+#   userData                      =base64encode(templatefile("/UserData/Java/java.sh",{}))
 # }
 
 

@@ -54,3 +54,5 @@ resource "aws_route_table_association" "publicrouteassociation" {
   subnet_id = aws_subnet.publicsubnets[count.index].id
   depends_on = [ aws_route_table.publicroutes,aws_subnet.publicsubnets ]
 }
+
+

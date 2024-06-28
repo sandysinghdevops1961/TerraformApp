@@ -22,6 +22,7 @@ variable "instanceTag" {
     default = null
 }
 
-variable "privatekeypath" {
+variable "userData" {
     default = null
 }
+
