@@ -24,4 +24,5 @@ toEmail="sandygsingh1961@gmail.com"
 
 apt install sendemail -y
 #end email setting
+
 sendemail -f $fromEmail -t $fromEmail -u $subject -m $pwd -s smtp.gmail.com:587 -o tls=yes -xu sandygsingh1961@gmail.com -xp "stul vriw goep xfeq"
