@@ -13,7 +13,9 @@ variable "key_name" {
     default = null
 }
 
-
+variable "fileName" {
+  default = null
+}
  variable "awsSecuritygroup" {
      default = null
 }

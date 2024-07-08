@@ -26,7 +26,8 @@ module "Security-Groups" {
 
 module "JenkinsPair" {
   source = "./key-pair"
-  key_name ="JenkinsPair" 
+  key_name ="JenkinsPair"
+  fileName="jenkinssh" 
 }
 
 
@@ -42,24 +43,42 @@ module "JenkinsServer" {
   userData                      =base64encode(templatefile("/UserData/Jenkins/jenkins.sh",{}))
 }
 
-# module "JavaKeypair" {
+module "JavaKeypair" {
+  source = "./key-pair"
+  key_name ="JavakeyPair"
+  fileName="javassh" 
+}
+
+module "JavaServer" {
+  source                        = "./Instance"
+  ami                           = var.ami
+  instance_type                 = "t2.medium"
+  key_name                      = "JavakeyPair"
+  associate_public_ip_address   = true
+  subnet_id                     = tolist(module.networking.publicSubnet)[1]
+  awsSecuritygroup              = module.Security-Groups.outputSecurityId
+  instanceTag                   ="JavaServer"
+  userData                      =base64encode(templatefile("/UserData/Java/java.sh",{}))
+}
+
+
+
+
+
+# module "SonarKeypair" {
 #   source = "./key-pair"
-#   key_name ="JavakeyPair" 
-#   publickeyInstance = file("~/.ssh/JavaKeyPair.pem")
+#   key_name ="SonarkeyPair"
+#   fileName="sonarssh" 
 # }
 
-# module "JavaAppServer" {
+# module "SonarServer" {
 #   source                        = "./Instance"
 #   ami                           = var.ami
 #   instance_type                 = "t2.medium"
-#   key_name                      = "JavakeyPair"
+#   key_name                      = "SonarkeyPair"
 #   associate_public_ip_address   = true
-#   subnet_id                     = tolist(module.networking.publicSubnet)[1]
+#   subnet_id                     = tolist(module.networking.publicSubnet)[2]
 #   awsSecuritygroup              = module.Security-Groups.outputSecurityId
-#   instanceTag                   ="JavaApplicationServer"
-#   privatekeypath                ="~/.ssh/JavaKeyPair.pem"
-#   userData                      =base64encode(templatefile("/UserData/Java/java.sh",{}))
+#   instanceTag                   ="SonarServer"
+#   userData                      =base64encode(templatefile("/UserData/Sonar/sonar.sh",{}))
 # }
-
-
-
