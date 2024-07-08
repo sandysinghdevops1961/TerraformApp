@@ -1,7 +1,7 @@
-# terraform {
-#   backend "s3" {
-#     bucket = "terraformstate1961"
-#     region = "ap-south-1"
-#     key = "terrform/state.tfstate"
-#   }
-# }
+terraform {
+  backend "s3" {
+    bucket = "infrastructure"
+    region = "ap-south-1"
+    key = "terrform/dev/state.tfstate"
+  }
+}
